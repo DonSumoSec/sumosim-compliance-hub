@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'SumoSim_Compliance_Hub.xlsx'
+      - 'generate_hub.py'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
 
 jobs:
@@ -11,24 +13,94 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Set up Python
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify required files exist
+        run: |
+          echo "=== Repo contents ==="
+          ls -la
+          echo ""
+
+          if [ ! -f "SumoSim_Compliance_Hub.xlsx" ]; then
+            echo "ERROR: SumoSim_Compliance_Hub.xlsx not found in repo root"
+            exit 1
+          fi
+
+          if [ ! -f "generate_hub.py" ]; then
+            echo "ERROR: generate_hub.py not found in repo root"
+            exit 1
+          fi
+
+          echo "✓ SumoSim_Compliance_Hub.xlsx found ($(du -h SumoSim_Compliance_Hub.xlsx | cut -f1))"
+          echo "✓ generate_hub.py found"
+
+      - name: Validate XL file is not corrupt
+        run: |
+          file SumoSim_Compliance_Hub.xlsx
+          if ! file SumoSim_Compliance_Hub.xlsx | grep -q "Zip\|zip\|Microsoft\|OOXML"; then
+            echo "WARNING: File may not be a valid xlsx - checking further..."
+          fi
+          echo "✓ File check passed"
+
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install openpyxl
+        run: |
+          pip install --upgrade pip
+          pip install openpyxl
+          python -c "import openpyxl; print(f'✓ openpyxl {openpyxl.__version__} installed')"
 
-      - name: Build HTML
-        run: python3 generate_hub.py
+      - name: Run hub generator
+        run: |
+          echo "=== Running generate_hub.py ==="
+          python3 generate_hub.py
+          echo ""
 
-      - name: Commit and push index.html
+          if [ ! -f "index.html" ]; then
+            echo "ERROR: index.html was not generated"
+            exit 1
+          fi
+
+          SIZE=$(du -h index.html | cut -f1)
+          LINES=$(wc -l < index.html)
+          echo "✓ index.html generated — size: $SIZE, lines: $LINES"
+
+          # Basic sanity check on output
+          if ! grep -q "SumoSim" index.html; then
+            echo "ERROR: index.html looks wrong — SumoSim not found in output"
+            exit 1
+          fi
+          echo "✓ Content check passed"
+
+      - name: Commit and push updated index.html
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --staged --quiet || git commit -m "Auto-rebuild compliance hub from updated XL"
-          git push
+
+          if git diff --staged --quiet; then
+            echo "No changes to index.html — skipping commit"
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "Auto-rebuild compliance hub — $TIMESTAMP"
+            git push
+            echo "✓ index.html committed and pushed"
+          fi
+
+      - name: Summary
+        run: |
+          echo "================================"
+          echo "  BUILD COMPLETE"
+          echo "================================"
+          echo "  Hub URL: https://donsumosec.github.io/sumosim-compliance-hub/"
+          echo "  Built at: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          echo "================================"
