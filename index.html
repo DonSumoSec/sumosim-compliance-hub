@@ -2,203 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SumoSim | Compliance Hub</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#0a0a0a; color:#e0e0e0; min-height:100vh; }
-  .topbar { background:#111; border-bottom:1px solid #222; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; }
-  .topbar-brand { font-size:15px; font-weight:600; letter-spacing:0.5px; }
-  .topbar-brand span { color:#fff; }
-  .topbar-brand .dot { color:#666; margin:0 8px; }
-  .topbar-meta { font-size:12px; color:#555; }
-  .layout { display:flex; height:calc(100vh - 45px); }
-  .sidebar { width:220px; background:#111; border-right:1px solid #1e1e1e; overflow-y:auto; flex-shrink:0; padding:16px 0; }
-  .sidebar-section { padding:8px 16px 4px; font-size:10px; font-weight:700; color:#444; letter-spacing:1.5px; text-transform:uppercase; }
-  .sidebar-item { padding:8px 16px; font-size:13px; color:#888; cursor:pointer; border-left:2px solid transparent; transition:all 0.15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .sidebar-item:hover { color:#ccc; background:#161616; }
-  .sidebar-item.active { color:#fff; border-left-color:#fff; background:#161616; }
-  .sidebar-badge { display:inline-block; font-size:9px; padding:1px 5px; border-radius:3px; margin-left:6px; font-weight:600; vertical-align:middle; }
-  .badge-live { background:#1a3a1a; color:#4caf50; }
-  .badge-draft { background:#3a2a1a; color:#ff9800; }
-  .badge-review { background:#1a2a3a; color:#2196f3; }
-  .main { flex:1; overflow-y:auto; padding:24px; }
-  .dashboard-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
-  .stat-card { background:#111; border:1px solid #1e1e1e; border-radius:6px; padding:16px; }
-  .stat-number { font-size:28px; font-weight:700; color:#fff; }
-  .stat-label { font-size:11px; color:#555; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
-  .doc-table { width:100%; border-collapse:collapse; background:#111; border-radius:6px; overflow:hidden; border:1px solid #1e1e1e; }
-  .doc-table th { background:#161616; padding:10px 14px; text-align:left; font-size:11px; color:#555; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; border-bottom:1px solid #1e1e1e; }
-  .doc-table td { padding:10px 14px; font-size:13px; border-bottom:1px solid #161616; }
-  .doc-table tr:last-child td { border-bottom:none; }
-  .doc-table tr:hover td { background:#141414; cursor:pointer; }
-  .status-pill { display:inline-block; font-size:10px; padding:2px 8px; border-radius:12px; font-weight:600; }
-  .status-Live { background:#1a3a1a; color:#4caf50; }
-  .status-Draft { background:#3a2a1a; color:#ff9800; }
-  .status-Under-Review { background:#1a2a3a; color:#2196f3; }
-  .status-Expired { background:#3a1a1a; color:#f44336; }
-  .pub-yes { color:#4caf50; font-size:12px; }
-  .pub-no { color:#555; font-size:12px; }
-  .pub-pending { color:#ff9800; font-size:12px; }
-  .detail-panel { background:#111; border:1px solid #1e1e1e; border-radius:6px; padding:24px; }
-  .detail-title { font-size:20px; font-weight:700; color:#fff; margin-bottom:16px; }
-  .detail-meta { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid #1e1e1e; }
-  .meta-item { font-size:12px; color:#666; }
-  .meta-item strong { color:#aaa; display:block; margin-bottom:2px; }
-  .content-section { margin-bottom:20px; padding:16px; background:#0d0d0d; border-radius:4px; border:1px solid #1a1a1a; }
-  .content-section h4 { font-size:12px; color:#555; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
-  .content-text { font-size:14px; color:#ccc; line-height:1.6; }
-  .draft-text { font-size:14px; color:#ff9800; line-height:1.6; font-style:italic; }
-  .notes-text { font-size:12px; color:#666; margin-top:8px; padding:8px; background:#111; border-radius:3px; border-left:2px solid #333; }
-  .copy-btn { background:#1e1e1e; border:1px solid #2a2a2a; color:#888; padding:6px 14px; border-radius:4px; font-size:12px; cursor:pointer; margin-top:12px; }
-  .copy-btn:hover { background:#252525; color:#ccc; }
-  .filter-bar { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
-  .filter-btn { background:#1a1a1a; border:1px solid #2a2a2a; color:#666; padding:5px 12px; border-radius:4px; font-size:12px; cursor:pointer; }
-  .filter-btn:hover, .filter-btn.active { background:#222; color:#ccc; border-color:#444; }
-  .section-title { font-size:13px; font-weight:600; color:#888; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px; }
-  .generated { font-size:11px; color:#333; padding:16px 0 4px; text-align:right; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;min-height:100vh}
+.topbar{background:#111;border-bottom:1px solid #222;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:15px;font-weight:600}.brand span{color:#fff}.brand .dot{color:#666;margin:0 8px}
+.meta{font-size:12px;color:#555}
+.layout{display:flex;height:calc(100vh - 45px)}
+.sidebar{width:230px;background:#111;border-right:1px solid #1e1e1e;overflow-y:auto;flex-shrink:0;padding:16px 0}
+.sb-sec{padding:8px 16px 4px;font-size:10px;font-weight:700;color:#444;letter-spacing:1.5px;text-transform:uppercase}
+.sb-item{padding:8px 16px;font-size:13px;color:#888;cursor:pointer;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-item:hover{color:#ccc;background:#161616}.sb-item.active{color:#fff;border-left-color:#fff;background:#161616}
+.badge{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:6px;font-weight:600;vertical-align:middle}
+.bl{background:#1a3a1a;color:#4caf50}.bd{background:#3a2a1a;color:#ff9800}.br{background:#1a2a3a;color:#2196f3}.bp{background:#2a2a1a;color:#ffeb3b}
+.main{flex:1;overflow-y:auto;padding:24px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.card{background:#111;border:1px solid #1e1e1e;border-radius:6px;padding:16px}
+.num{font-size:28px;font-weight:700;color:#fff}.lbl{font-size:11px;color:#555;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;background:#111;border-radius:6px;overflow:hidden;border:1px solid #1e1e1e}
+th{background:#161616;padding:10px 14px;text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.8px;font-weight:600;border-bottom:1px solid #1e1e1e}
+td{padding:10px 14px;font-size:13px;border-bottom:1px solid #161616}
+tr:last-child td{border-bottom:none}tr:hover td{background:#141414;cursor:pointer}
+.pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600}
+.sL{background:#1a3a1a;color:#4caf50}.sD{background:#3a2a1a;color:#ff9800}.sR{background:#1a2a3a;color:#2196f3}.sP{background:#2a2a1a;color:#ffeb3b}
+.pY{color:#4caf50;font-size:12px}.pN{color:#555;font-size:12px}.pP{color:#ff9800;font-size:12px}
+.panel{background:#111;border:1px solid #1e1e1e;border-radius:6px;padding:24px}
+.ptitle{font-size:20px;font-weight:700;color:#fff;margin-bottom:16px}
+.pmeta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #1e1e1e}
+.mi{font-size:12px;color:#666}.mi strong{color:#aaa;display:block;margin-bottom:2px}
+.cs{margin-bottom:16px;padding:16px;background:#0d0d0d;border-radius:4px;border:1px solid #1a1a1a}
+.cs h4{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.ct{font-size:14px;color:#ccc;line-height:1.6}.dt{font-size:14px;color:#ff9800;line-height:1.6;font-style:italic}
+.nt{font-size:12px;color:#666;margin-top:8px;padding:8px;background:#111;border-radius:3px;border-left:2px solid #333}
+.cpbtn{background:#1e1e1e;border:1px solid #2a2a2a;color:#888;padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-top:12px}
+.cpbtn:hover{background:#252525;color:#ccc}
+.fbtn{background:#1a1a1a;border:1px solid #2a2a2a;color:#666;padding:5px 12px;border-radius:4px;font-size:12px;cursor:pointer}
+.fbtn:hover,.fbtn.active{background:#222;color:#ccc;border-color:#444}
+.fbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.stitle{font-size:13px;font-weight:600;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.gen{font-size:11px;color:#333;padding:16px 0 4px;text-align:right}
+.back{color:#555;font-size:12px;cursor:pointer;margin-bottom:16px;display:inline-block}
+.back:hover{color:#aaa}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div class="topbar-brand"><span>SumoSim</span><span class="dot">•</span>Compliance Hub</div>
-  <div class="topbar-meta">Generated 12 Mar 2026 21:37 — edit SumoSim_Compliance_Hub.xlsx then re-run generate_hub.py</div>
+  <div class="brand"><span>SumoSim</span><span class="dot">•</span>Compliance Hub</div>
+  <div class="meta">Generated 12 Mar 2026 23:19 &nbsp;·&nbsp; 14 documents &nbsp;·&nbsp; Source: SumoSim_Compliance_Hub.xlsx</div>
 </div>
 <div class="layout">
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-section">Overview</div>
-    <div class="sidebar-item active" onclick="showDashboard(this)">📊 Dashboard</div>
-    <div class="sidebar-section" style="margin-top:12px">Documents</div>
+  <div class="sidebar" id="sb">
+    <div class="sb-sec">Overview</div>
+    <div class="sb-item active" id="nav-dash" onclick="showDash(this)">📊 Dashboard</div>
+    <div class="sb-sec" style="margin-top:12px">Documents</div>
   </div>
   <div class="main" id="main"></div>
 </div>
-
 <script>
-const DOCS = [{"title": "Terms and Conditions", "category": "Legal", "version": "1.4", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "2027-01-15 00:00:00", "websitePage": "/terms", "published": "No"}, {"title": "Privacy Policy", "category": "Privacy", "version": "2.2", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jan 2027", "websitePage": "/privacy-policy", "published": "No"}, {"title": "Cookie Policy", "category": "Privacy", "version": "1.1", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jul 2026", "websitePage": "/cookie-policy", "published": "No"}, {"title": "Acceptable Use Policy", "category": "Legal", "version": "1.1", "status": "Live", "reviewedBy": "Legal Team", "lastReviewed": "01 Feb 2026", "nextReview": "01 Feb 2027", "websitePage": "/aup", "published": "Yes"}, {"title": "Vulnerability Situation Policy", "category": "Security", "version": "1.0", "status": "Under Review", "reviewedBy": "CTO", "lastReviewed": "10 Mar 2026", "nextReview": "10 Mar 2027", "websitePage": "/vulnerability", "published": "No"}, {"title": "Privacy Notice", "category": "Privacy", "version": "1.2", "status": "Live", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jan 2027", "websitePage": "/privacy-notice", "published": "Yes"}, {"title": "Security Policy", "category": "Security", "version": "1.0", "status": "Draft", "reviewedBy": "CTO", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/security-policy", "published": "Pending"}, {"title": "Customer Code of Practice", "category": "Consumer", "version": "1.0", "status": "Live", "reviewedBy": "CEO", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/code-of-practice", "published": "Yes"}, {"title": "Accessibility Policy", "category": "Consumer", "version": "1.0", "status": "Live", "reviewedBy": "Ops", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/accessibility", "published": "Yes"}, {"title": "MVNO Fair Use Policy", "category": "Telecoms", "version": "1.0", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "01 Mar 2026", "nextReview": "01 Sep 2026", "websitePage": "/fair-use", "published": "No"}, {"title": "Crypto Rewards T&Cs", "category": "Crypto", "version": "1.1", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/crypto-terms", "published": "No"}, {"title": "Data Retention Policy", "category": "Privacy", "version": "1.0", "status": "Draft", "reviewedBy": "CTO", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/data-retention", "published": "No"}, {"title": "Complaints Policy", "category": "Consumer", "version": "1.1", "status": "Live", "reviewedBy": "Ops", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/complaints", "published": "Yes"}, {"title": "Gamification & Referral Policy", "category": "Legal", "version": "1.1", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "46093", "nextReview": "46458", "websitePage": "/gamification", "published": "No"}, {"title": "TOTAL DOCUMENTS: 14", "category": "", "version": "", "status": "5", "reviewedBy": "Live docs", "lastReviewed": "5", "nextReview": "Draft docs", "websitePage": "5", "published": "Published"}];
-const CONTENT = {"Terms and Conditions": [{"section": "1. Parties", "live": "This agreement is between SumoSim Ltd (registered in England & Wales, Co. No. XXXXXXXX) and the subscriber.", "draft": "", "notes": "Co. number confirmed: 16233377. Update content to reflect this."}, {"section": "2. Service Description", "live": "SumoSim provides MVNO mobile services in the United Kingdom with cryptocurrency cashback rewards on qualifying spend.", "draft": "", "notes": "Crypto cashback rate placeholder [RATE]% \u2014 update once rates confirmed with CEO."}, {"section": "3. Payment Terms", "live": "Monthly plans are billed in advance. SIMs activate within 24 hours of successful payment.", "draft": "", "notes": ""}], "Privacy Policy": [{"section": "1. Who We Are", "live": "SumoSim Ltd is the data controller for personal data collected via sumosim.com and our mobile services.", "draft": "", "notes": "ICO registration number confirmed: ZB980254. Update content to reflect this."}, {"section": "2. Data We Collect", "live": "We collect name, address, email, phone number, payment details, and usage data for service delivery.", "draft": "", "notes": "Add crypto wallet address collection."}, {"section": "3. Legal Basis", "live": "We process data under contract performance (Art. 6(1)(b) UK GDPR) and legitimate interests.", "draft": "", "notes": ""}], "Cookie Policy": [{"section": "1. What Cookies We Use", "live": "We use strictly necessary cookies, analytics cookies (Google Analytics), and functional cookies.", "draft": "", "notes": "Add Crisp chat cookie."}, {"section": "2. How to Opt Out", "live": "You can manage cookies via our cookie banner or your browser settings at any time.", "draft": "", "notes": ""}], "Acceptable Use Policy": [{"section": "1. Prohibited Activities", "live": "You must not use SumoSim services for illegal activity, spam, network abuse, or resale without written consent.", "draft": "", "notes": ""}], "Vulnerability Situation Policy": [{"section": "1. Scope", "live": "This policy applies to customers who may be in vulnerable circumstances including financial difficulty or bereavement.", "draft": "", "notes": "Draft \u2014 CTO to review."}], "Security Policy": [{"section": "1. Incident Response", "live": "", "draft": "Draft: All security incidents must be reported to security@sumosim.com within 24 hours of discovery.", "notes": "Claude: please expand into full policy using UK NCSC guidance."}], "Customer Code of Practice": [{"section": "1. Our Commitment", "live": "SumoSim is committed to fair, transparent, and accessible mobile services for all customers.", "draft": "", "notes": ""}, {"section": "2. Complaints", "live": "Complaints can be submitted via help@sumosim.com. We aim to resolve within 8 weeks (Ofcom requirement).", "draft": "", "notes": ""}], "Accessibility Policy": [{"section": "1. Web Accessibility", "live": "sumosim.com targets WCAG 2.1 AA compliance. Screen reader support is available throughout.", "draft": "", "notes": ""}], "Complaints Policy": [{"section": "1. Process", "live": "Stage 1: Contact us. Stage 2: Internal escalation (7 days). Stage 3: Ombudsman referral if unresolved.", "draft": "", "notes": ""}], "MVNO Fair Use Policy": [{"section": "1. Data Usage", "live": "", "draft": "Draft: Unlimited plans are subject to a 250GB monthly fair use limit. Speeds may be reduced above this threshold.", "notes": "Claude: align with Ofcom guidance on fair use for MVNOs."}], "Crypto Rewards T&Cs": [{"section": "1. Earning Rewards", "live": "", "draft": "Draft: Crypto cashback is earned on all qualifying SumoSim plan payments at the rate published on sumosim.com.", "notes": "Claude: ensure compliant with FCA crypto comms rules."}, {"section": "1. Overview", "live": "SUMOSIM issues discretionary Digital Asset Rewards as a percentage ([RATE]%) of monthly plan fee, distributed to non-custodial SumoSim Wallet on last day of calendar month. Not FCA regulated. Not FSCS protected.", "draft": "", "notes": "Version 1.1 drafted. Crypto cashback rate [RATE]% placeholder remains \u2014 confirm with CEO before going live."}], "Data Retention Policy": [{"section": "1. Retention Periods", "live": "", "draft": "Draft: Customer data is retained for 6 years after contract end for legal/tax compliance.", "notes": "Claude: cross-reference with ICO retention guidance."}], "Gamification & Referral Policy": [{"section": "1. Overview", "live": "SUMOSIM operates a gamification programme across 52 levels and 6 tiers (Rookie to Champion) rewarding customers for loyalty, engagement, and referrals with SumoPoints, Achievement Bonuses, Badges, Streaks, Leaderboards, and Airdrops.", "draft": "", "notes": "Version 1.1 drafted. Two TBD placeholders remain: Achievement Bonus payment timescale and Leaderboard prize payment timescale."}]};
+const DOCS=[{"title": "Terms and Conditions", "category": "Legal", "version": "1.4", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jan 2027", "websitePage": "/terms", "published": "No"}, {"title": "Privacy Policy", "category": "Privacy", "version": "2.2", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jan 2027", "websitePage": "/privacy-policy", "published": "No"}, {"title": "Cookie Policy", "category": "Privacy", "version": "1.1", "status": "Under Review", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jul 2026", "websitePage": "/cookie-policy", "published": "No"}, {"title": "Acceptable Use Policy", "category": "Legal", "version": "1.1", "status": "Live", "reviewedBy": "Legal Team", "lastReviewed": "01 Feb 2026", "nextReview": "01 Feb 2027", "websitePage": "/aup", "published": "Yes"}, {"title": "Vulnerability Situation Policy", "category": "Security", "version": "1.0", "status": "Under Review", "reviewedBy": "CTO", "lastReviewed": "10 Mar 2026", "nextReview": "10 Mar 2027", "websitePage": "/vulnerability", "published": "No"}, {"title": "Privacy Notice", "category": "Privacy", "version": "1.2", "status": "Live", "reviewedBy": "Legal Team", "lastReviewed": "15 Jan 2026", "nextReview": "15 Jan 2027", "websitePage": "/privacy-notice", "published": "Yes"}, {"title": "Security Policy", "category": "Security", "version": "1.0", "status": "Draft", "reviewedBy": "CTO", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/security-policy", "published": "Pending"}, {"title": "Customer Code of Practice", "category": "Consumer", "version": "1.0", "status": "Live", "reviewedBy": "CEO", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/code-of-practice", "published": "Yes"}, {"title": "Accessibility Policy", "category": "Consumer", "version": "1.0", "status": "Live", "reviewedBy": "Ops", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/accessibility", "published": "Yes"}, {"title": "MVNO Fair Use Policy", "category": "Telecoms", "version": "1.0", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "01 Mar 2026", "nextReview": "01 Sep 2026", "websitePage": "/fair-use", "published": "No"}, {"title": "Crypto Rewards T&Cs", "category": "Crypto", "version": "1.1", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/crypto-terms", "published": "No"}, {"title": "Data Retention Policy", "category": "Privacy", "version": "1.0", "status": "Draft", "reviewedBy": "CTO", "lastReviewed": "01 Mar 2026", "nextReview": "01 Mar 2027", "websitePage": "/data-retention", "published": "No"}, {"title": "Complaints Policy", "category": "Consumer", "version": "1.1", "status": "Live", "reviewedBy": "Ops", "lastReviewed": "20 Jan 2026", "nextReview": "20 Jan 2027", "websitePage": "/complaints", "published": "Yes"}, {"title": "Gamification & Referral Policy", "category": "Legal", "version": "1.1", "status": "Draft", "reviewedBy": "Legal Team", "lastReviewed": "12 Mar 2026", "nextReview": "12 Mar 2027", "websitePage": "/gamification", "published": "No"}],CONTENT={"Terms and Conditions": [{"section": "1. Parties", "live": "This agreement is between SumoSim Ltd (registered in England & Wales, Co. No. XXXXXXXX) and the subscriber.", "draft": "", "notes": "Co. number confirmed: 16233377. Update content to reflect this."}, {"section": "2. Service Description", "live": "SumoSim provides MVNO mobile services in the United Kingdom with cryptocurrency cashback rewards on qualifying spend.", "draft": "", "notes": "Crypto cashback rate placeholder [RATE]% — update once rates confirmed with CEO."}, {"section": "3. Payment Terms", "live": "Monthly plans are billed in advance. SIMs activate within 24 hours of successful payment.", "draft": "", "notes": ""}], "Privacy Policy": [{"section": "1. Who We Are", "live": "SumoSim Ltd is the data controller for personal data collected via sumosim.com and our mobile services.", "draft": "", "notes": "ICO registration number confirmed: ZB980254. Update content to reflect this."}, {"section": "2. Data We Collect", "live": "We collect name, address, email, phone number, payment details, and usage data for service delivery.", "draft": "", "notes": "Add crypto wallet address collection."}, {"section": "3. Legal Basis", "live": "We process data under contract performance (Art. 6(1)(b) UK GDPR) and legitimate interests.", "draft": "", "notes": ""}], "Cookie Policy": [{"section": "1. What Cookies We Use", "live": "We use strictly necessary cookies, analytics cookies (Google Analytics), and functional cookies.", "draft": "", "notes": "Add Crisp chat cookie."}, {"section": "2. How to Opt Out", "live": "You can manage cookies via our cookie banner or your browser settings at any time.", "draft": "", "notes": ""}], "Acceptable Use Policy": [{"section": "1. Prohibited Activities", "live": "You must not use SumoSim services for illegal activity, spam, network abuse, or resale without written consent.", "draft": "", "notes": ""}], "Vulnerability Situation Policy": [{"section": "1. Scope", "live": "This policy applies to customers who may be in vulnerable circumstances including financial difficulty or bereavement.", "draft": "", "notes": "Draft — CTO to review."}], "Security Policy": [{"section": "1. Incident Response", "live": "", "draft": "Draft: All security incidents must be reported to security@sumosim.com within 24 hours of discovery.", "notes": "Claude: please expand into full policy using UK NCSC guidance."}], "Customer Code of Practice": [{"section": "1. Our Commitment", "live": "SumoSim is committed to fair, transparent, and accessible mobile services for all customers.", "draft": "", "notes": ""}, {"section": "2. Complaints", "live": "Complaints can be submitted via help@sumosim.com. We aim to resolve within 8 weeks (Ofcom requirement).", "draft": "", "notes": ""}], "Accessibility Policy": [{"section": "1. Web Accessibility", "live": "sumosim.com targets WCAG 2.1 AA compliance. Screen reader support is available throughout.", "draft": "", "notes": ""}], "Complaints Policy": [{"section": "1. Process", "live": "Stage 1: Contact us. Stage 2: Internal escalation (7 days). Stage 3: Ombudsman referral if unresolved.", "draft": "", "notes": ""}], "MVNO Fair Use Policy": [{"section": "1. Data Usage", "live": "", "draft": "Draft: Unlimited plans are subject to a 250GB monthly fair use limit. Speeds may be reduced above this threshold.", "notes": "Claude: align with Ofcom guidance on fair use for MVNOs."}], "Crypto Rewards T&Cs": [{"section": "1. Earning Rewards", "live": "", "draft": "Draft: Crypto cashback is earned on all qualifying SumoSim plan payments at the rate published on sumosim.com.", "notes": "Claude: ensure compliant with FCA crypto comms rules."}, {"section": "1. Overview", "live": "SUMOSIM issues discretionary Digital Asset Rewards as a percentage ([RATE]%) of monthly plan fee, distributed to non-custodial SumoSim Wallet on last day of calendar month. Not FCA regulated. Not FSCS protected.", "draft": "", "notes": "Version 1.1 drafted. Crypto cashback rate [RATE]% placeholder remains — confirm with CEO before going live."}], "Data Retention Policy": [{"section": "1. Retention Periods", "live": "", "draft": "Draft: Customer data is retained for 6 years after contract end for legal/tax compliance.", "notes": "Claude: cross-reference with ICO retention guidance."}], "Gamification & Referral Policy": [{"section": "1. Overview", "live": "SUMOSIM operates a gamification programme across 52 levels and 6 tiers (Rookie to Champion) rewarding customers for loyalty, engagement, and referrals with SumoPoints, Achievement Bonuses, Badges, Streaks, Leaderboards, and Airdrops.", "draft": "", "notes": "Version 1.1 drafted. Two TBD placeholders remain: Achievement Bonus payment timescale and Leaderboard prize payment timescale."}]};
+let CF='All';
 
-let currentFilter = 'All';
+const SC=s=>s==='Live'?'sL':s==='Draft'?'sD':s==='Under Review'?'sR':'sP';
+const BC=s=>s==='Live'?'bl':s==='Draft'?'bd':s==='Under Review'?'br':'bp';
+const BS=s=>s==='Live'?'L':s==='Draft'?'D':s==='Under Review'?'R':'P';
+const PC=p=>p==='Yes'?'pY':p==='Pending'?'pP':'pN';
+const PL=p=>p==='Yes'?'✓ Live':p==='Pending'?'⏳ Pending':'— Unpublished';
 
-function statusClass(s) {
-  return 'status-' + s.replace(' ', '-');
-}
+function setActive(el){document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));if(el)el.classList.add('active');}
 
-function pubClass(p) {
-  if(p==='Yes') return 'pub-yes';
-  if(p==='Pending') return 'pub-pending';
-  return 'pub-no';
-}
-
-function buildSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  DOCS.forEach((doc, i) => {
-    const el = document.createElement('div');
-    el.className = 'sidebar-item';
-    el.id = 'nav-' + i;
-    const badge = doc.status === 'Live' ? 'badge-live' :
-                  doc.status === 'Draft' ? 'badge-draft' : 'badge-review';
-    const short = doc.status === 'Live' ? 'L' : doc.status === 'Draft' ? 'D' : 'R';
-    el.innerHTML = doc.title + `<span class="sidebar-badge ${badge}">${short}</span>`;
-    el.onclick = function() { showDoc(i, this); };
-    sidebar.appendChild(el);
+function buildSB(){
+  const sb=document.getElementById('sb');
+  DOCS.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='sb-item';el.id='nav-'+i;
+    el.innerHTML=d.title+`<span class="badge ${BC(d.status)}">${BS(d.status)}</span>`;
+    el.onclick=()=>showDoc(i,el);
+    sb.appendChild(el);
   });
 }
 
-function showDashboard(el) {
-  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  const live = DOCS.filter(d=>d.status==='Live').length;
-  const draft = DOCS.filter(d=>d.status==='Draft').length;
-  const review = DOCS.filter(d=>d.status==='Under Review').length;
-  const pub = DOCS.filter(d=>d.published==='Yes').length;
-
-  let filtered = currentFilter === 'All' ? DOCS : DOCS.filter(d =>
-    currentFilter === 'Live' ? d.status==='Live' :
-    currentFilter === 'Draft' ? d.status==='Draft' :
-    currentFilter === 'Review' ? d.status==='Under Review' :
-    d.category === currentFilter
-  );
-
-  const categories = [...new Set(DOCS.map(d=>d.category))];
-  const filterBtns = ['All','Live','Draft','Review',...categories].map(f =>
-    `<button class="filter-btn ${currentFilter===f?'active':''}" onclick="setFilter('${f}')">${f}</button>`
-  ).join('');
-
-  const rows = filtered.map((doc,i) => `
-    <tr onclick="showDoc(${DOCS.indexOf(doc)}, document.getElementById('nav-${DOCS.indexOf(doc)}'))">
-      <td style="color:#fff;font-weight:500">${doc.title}</td>
-      <td style="color:#666">${doc.category}</td>
-      <td style="color:#555">v${doc.version}</td>
-      <td><span class="status-pill ${statusClass(doc.status)}">${doc.status}</span></td>
-      <td style="color:#666">${doc.nextReview}</td>
-      <td><span class="${pubClass(doc.published)}">${doc.published==='Yes'?'✓ Live':doc.published==='Pending'?'⏳ Pending':'— Unpublished'}</span></td>
-    </tr>`).join('');
-
-  document.getElementById('main').innerHTML = `
-    <div class="dashboard-grid">
-      <div class="stat-card"><div class="stat-number">${DOCS.length}</div><div class="stat-label">Total Documents</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#4caf50">${live}</div><div class="stat-label">Live</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#ff9800">${draft}</div><div class="stat-label">Draft</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#4caf50">${pub}</div><div class="stat-label">Published on Site</div></div>
+function showDash(el){
+  setActive(el||document.getElementById('nav-dash'));
+  const cats=[...new Set(DOCS.map(d=>d.category))].filter(Boolean);
+  const filt=CF==='All'?DOCS:DOCS.filter(d=>CF==='Live'?d.status==='Live':CF==='Draft'?d.status==='Draft':CF==='Review'?d.status==='Under Review':d.category===CF);
+  const fbtn=['All','Live','Draft','Review',...cats].map(f=>`<button class="fbtn ${CF===f?'active':''}" onclick="setF('${f}')">${f}</button>`).join('');
+  const live=DOCS.filter(d=>d.status==='Live').length,draft=DOCS.filter(d=>d.status==='Draft').length,pub=DOCS.filter(d=>d.published==='Yes').length;
+  const rows=filt.map(d=>{const i=DOCS.indexOf(d);return `<tr onclick="showDoc(${i},document.getElementById('nav-${i}'))">
+    <td style="color:#fff;font-weight:500">${d.title}</td><td style="color:#666">${d.category}</td>
+    <td style="color:#555">v${d.version}</td><td><span class="pill ${SC(d.status)}">${d.status}</span></td>
+    <td style="color:#666">${d.nextReview}</td><td><span class="${PC(d.published)}">${PL(d.published)}</span></td>
+  </tr>`;}).join('');
+  document.getElementById('main').innerHTML=`
+    <div class="grid">
+      <div class="card"><div class="num">${DOCS.length}</div><div class="lbl">Total Documents</div></div>
+      <div class="card"><div class="num" style="color:#4caf50">${live}</div><div class="lbl">Live</div></div>
+      <div class="card"><div class="num" style="color:#ff9800">${draft}</div><div class="lbl">Draft</div></div>
+      <div class="card"><div class="num" style="color:#4caf50">${pub}</div><div class="lbl">Published on Site</div></div>
     </div>
-    <div class="section-title">All Compliance Documents</div>
-    <div class="filter-bar">${filterBtns}</div>
-    <table class="doc-table">
-      <thead><tr>
-        <th>Document</th><th>Category</th><th>Version</th><th>Status</th><th>Next Review</th><th>Website</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="generated">Data from SumoSim_Compliance_Hub.xlsx · Generated 12 Mar 2026 21:37</div>
-  `;
+    <div class="stitle">All Compliance Documents</div>
+    <div class="fbar">${fbtn}</div>
+    <table><thead><tr><th>Document</th><th>Category</th><th>Version</th><th>Status</th><th>Next Review</th><th>Website</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <div class="gen">Data from SumoSim_Compliance_Hub.xlsx · Generated 12 Mar 2026 23:19</div>`;
 }
 
-function setFilter(f) {
-  currentFilter = f;
-  showDashboard(document.querySelector('.sidebar-item'));
-}
+function setF(f){CF=f;showDash(document.getElementById('nav-dash'));}
 
-function showDoc(i, navEl) {
-  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-  if(navEl) navEl.classList.add('active');
-  const doc = DOCS[i];
-  const sections = CONTENT[doc.title] || [];
-
-  const sectionsHtml = sections.map(s => `
-    <div class="content-section">
-      <h4>${s.section}</h4>
-      ${s.live ? `<div class="content-text">${s.live}</div>` : ''}
-      ${s.draft && s.draft !== s.live ? `<div class="draft-text">📝 Draft: ${s.draft}</div>` : ''}
-      ${s.notes ? `<div class="notes-text">💡 ${s.notes}</div>` : ''}
-    </div>
-  `).join('');
-
-  const allText = sections.map(s => `${s.section}\n${s.live || s.draft}`).join('\n\n');
-
-  document.getElementById('main').innerHTML = `
-    <div class="detail-panel">
-      <div style="margin-bottom:16px">
-        <span style="color:#555;font-size:12px;cursor:pointer" onclick="showDashboard(document.querySelector('.sidebar-item'))">← Dashboard</span>
+function showDoc(i,navEl){
+  setActive(navEl);
+  const doc=DOCS[i],sects=CONTENT[doc.title]||[];
+  const sh=sects.map(s=>`<div class="cs"><h4>${s.section}</h4>
+    ${s.live?`<div class="ct">${s.live}</div>`:''}
+    ${s.draft&&s.draft!==s.live?`<div class="dt">📝 Draft: ${s.draft}</div>`:''}
+    ${s.notes?`<div class="nt">💡 ${s.notes}</div>`:''}</div>`).join('');
+  const allText=sects.map(s=>s.section+'\n'+(s.live||s.draft)).join('\n\n');
+  document.getElementById('main').innerHTML=`
+    <div class="panel">
+      <span class="back" onclick="showDash(document.getElementById('nav-dash'))">← Dashboard</span>
+      <div class="ptitle">${doc.title}</div>
+      <div class="pmeta">
+        <div class="mi"><strong>Category</strong>${doc.category}</div>
+        <div class="mi"><strong>Version</strong>v${doc.version}</div>
+        <div class="mi"><strong>Status</strong><span class="pill ${SC(doc.status)}" style="font-size:11px">${doc.status}</span></div>
+        <div class="mi"><strong>Reviewed By</strong>${doc.reviewedBy}</div>
+        <div class="mi"><strong>Last Reviewed</strong>${doc.lastReviewed}</div>
+        <div class="mi"><strong>Next Review</strong>${doc.nextReview}</div>
+        <div class="mi"><strong>Website Page</strong>${doc.websitePage||'—'}</div>
+        <div class="mi"><strong>Published</strong>${doc.published}</div>
       </div>
-      <div class="detail-title">${doc.title}</div>
-      <div class="detail-meta">
-        <div class="meta-item"><strong>Category</strong>${doc.category}</div>
-        <div class="meta-item"><strong>Version</strong>v${doc.version}</div>
-        <div class="meta-item"><strong>Status</strong><span class="status-pill ${statusClass(doc.status)}" style="font-size:11px">${doc.status}</span></div>
-        <div class="meta-item"><strong>Reviewed By</strong>${doc.reviewedBy}</div>
-        <div class="meta-item"><strong>Last Reviewed</strong>${doc.lastReviewed}</div>
-        <div class="meta-item"><strong>Next Review</strong>${doc.nextReview}</div>
-        <div class="meta-item"><strong>Website Page</strong>${doc.websitePage || '—'}</div>
-        <div class="meta-item"><strong>Published</strong>${doc.published}</div>
-      </div>
-      ${sectionsHtml || '<div style="color:#444;font-style:italic">No content sections yet.</div>'}
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(allText)}'))">📋 Copy content for CMS</button>
-    </div>
-  `;
+      ${sh||'<div style="color:#444;font-style:italic;padding:16px 0">No content sections yet.</div>'}
+      ${allText.trim()?`<button class="cpbtn" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(allText)}'))
+        .then(()=>this.innerText='✓ Copied!').catch(()=>this.innerText='Copy failed')">📋 Copy content for CMS</button>`:''}
+    </div>`;
 }
 
-buildSidebar();
-showDashboard(document.querySelector('.sidebar-item'));
+buildSB();
+showDash(document.getElementById('nav-dash'));
 </script>
 </body>
 </html>
